@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'GenJyuuGothic P';
+    src: url(../fonts/GenJyuuGothic-P-Bold.ttf) format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GenJyuuGothic P';
+    src: url(../fonts/GenJyuuGothic-P-Regular.ttf) format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+html {
+    overflow: -moz-hidden-unscrollable;
+    height: 100%;
+    font-family: 'GenJyuuGothic P';
+    letter-spacing: 0.05em;
+}
+
+body {
+    -ms-overflow-style: none;
+    height: 100%;
+    overflow-y: auto;
+    margin: 0;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+.pointer {
+    cursor: pointer;
+  }
