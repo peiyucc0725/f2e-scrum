@@ -2,8 +2,64 @@
 </script>
 
 <template>
+  <div class="background"></div>
+  <div class="step-line">
+    <div class="progress" :style="`width: ${$store.state.step}%`"></div>
+  </div>
   <router-view></router-view>
+  <div class="footer">
+    <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.background {
+  position: absolute;
+  top: -30px;
+  bottom: -30px;
+  left: -30px;
+  right: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  background-size: contain;
+  background-image: url("./assets/images/bg/bg_village.png");
+  filter: blur(5px);
+  z-index: 0;
+}
+.step-line {
+  position: absolute;
+  top: 0;
+  min-width: 1440px;
+  width: 100%;
+  height: 12px;
+  background-color: $PrimaryDark;
+  z-index: 1;
+  .progress {
+    position: relative;
+    width: 0;
+    height: 12px;
+    background: linear-gradient(270deg, #00ffe0 0%, rgba(0, 255, 224, 0) 100%);
+    transition: 0.5s;
+  }
+}
+.footer {
+  min-width: 1440px;
+  width: 100%;
+  height: 44px;
+  position: absolute;
+  bottom: 0;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 140%;
+  color: $PrimaryDark;
+  background: $BgDark60;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

@@ -35,6 +35,14 @@ body {
     }
 }
 
+#app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 img {
     -webkit-user-drag: none;
     -khtml-user-drag: none;
@@ -54,4 +62,11 @@ button {
 
 .pointer {
     cursor: pointer;
-  }
+}
+
+.inner {
+    width: 1440px;
+    height: 100%;
+    position: relative;
+    margin: auto;
+}
