@@ -1,19 +1,40 @@
 <script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
+import Start from './views/Start.vue'
+import ProductBacklog from './views/ProductBacklog.vue'
+
+const store = useStore();
+const systemSetp = computed(() => {
+  return store.state.step;
+});
 </script>
 
 <template>
-  <div class="background"></div>
-  <div class="step-line">
-    <div class="progress" :style="`width: ${$store.state.step}%`"></div>
-  </div>
-  <router-view></router-view>
-  <div class="footer">
-    <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>
+  <div class="container">
+    <div class="background-blur"></div>
+    <div class="step-line" v-if="systemSetp !== 0">
+      <div class="progress" :style="`width: ${systemSetp}%`"></div>
+    </div>
+    <div class="step-container">
+      <Start v-if="systemSetp < 10" />
+      <ProductBacklog v-else-if="systemSetp < 20" />
+    </div>
+    <div class="footer">
+      <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.background {
+.container {
+  width: 100%;
+  min-width: 1440px;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.background-blur {
   position: absolute;
   top: -30px;
   bottom: -30px;
@@ -23,7 +44,7 @@
   height: calc(100% + 60px);
   background-size: contain;
   background-image: url("./assets/images/bg/bg_village.png");
-  filter: blur(5px);
+  filter: blur(5px) brightness(0.6);
   z-index: 0;
 }
 .step-line {

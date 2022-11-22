@@ -2,11 +2,12 @@
 defineProps({
   text: String,
   disabled: Boolean,
+  contantClass: String
 });
 </script>
 
 <template>
-  <button class="custom-btn" :disabled="disabled">
+  <button class="custom-btn" :class="{contantClass}" :disabled="disabled" v-bind="$attrs">
     <div>{{ text }}</div>
   </button>
 </template>
