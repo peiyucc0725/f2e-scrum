@@ -109,6 +109,7 @@ const handleEnd = () => {
 .start-page {
   width: 100%;
   height: 100vh;
+  min-height: 944px;
   position: relative;
   .loading-step {
     width: 100%;

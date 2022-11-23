@@ -14,6 +14,7 @@
 
 html {
     overflow: -moz-hidden-unscrollable;
+    min-height: 944px;
     height: 100%;
     font-family: 'GenJyuuGothic P';
     letter-spacing: 0.05em;
@@ -39,8 +40,8 @@ body {
     position: relative;
     width: 100%;
     height: 100vh;
-    overflow-x: auto;
-    overflow-y: hidden;
+    min-height: 944px;
+    overflow: auto;
 }
 
 img {
@@ -93,4 +94,37 @@ button {
 .fade-enter-to,
 .fade-leave-from {
     opacity: 1;
+}
+
+.fade-in-enter-active {
+    transition: opacity 1s;
+}
+
+.fade-in-enter-from,
+.fade-in-leave-to {
+    opacity: 0;
+}
+
+.fade-in-enter-to,
+.fade-in-leave-from {
+    opacity: 1;
+}
+
+h2 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    margin: 0;
+}
+
+h3 {
+    font-size: 24px;
+    line-height: 43px;
+    margin: 0;
+}
+
+.capation {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
 }

@@ -16,9 +16,10 @@ const systemSetp = computed(() => {
     <div class="step-line" v-if="systemSetp !== 0">
       <div class="progress" :style="`width: ${systemSetp}%`"></div>
     </div>
+    <!-- start: 10%, ProductBacklog: 25%, Planning: 40%, SprintBacklog: 55%, Process: 70%, Retro: 85%, Finish: 100% -->
     <div class="step-container">
       <Start v-if="systemSetp < 10" />
-      <ProductBacklog v-else-if="systemSetp < 20" />
+      <ProductBacklog v-else-if="systemSetp < 25" />
     </div>
     <div class="footer">
       <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>

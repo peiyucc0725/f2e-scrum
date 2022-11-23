@@ -1,47 +1,65 @@
 <script setup>
-import { ref } from "vue";
-import PoGif from '../assets/images/gif/ic_continue_po.gif'
-import SmGif from '../assets/images/gif/ic_continue_sm.gif'
-import Team1Gif from '../assets/images/gif/ic_continue_team1.gif'
-import Team2Gif from '../assets/images/gif/ic_continue_team2.gif'
+import { ref, watch, onMounted } from "vue";
+import PoGif from "../assets/images/gif/ic_continue_po.gif";
+import SmGif from "../assets/images/gif/ic_continue_sm.gif";
+import Team1Gif from "../assets/images/gif/ic_continue_team1.gif";
+import Team2Gif from "../assets/images/gif/ic_continue_team2.gif";
 
-defineProps({
+let props = defineProps({
   showNext: Boolean,
   width: Number,
   height: Number,
   role: String,
-  content: String
+  content: String,
 });
+const contentVisible = ref(true);
 const roleMapping = ref({
   po: {
     name: "PO",
     pathColor: "#005656",
     rectColor: "#00FFE0",
-    next: PoGif
+    next: PoGif,
   },
   sm: {
     name: "MM",
     pathColor: "#4C0071",
     rectColor: "#D355FF",
-    next: SmGif
+    next: SmGif,
   },
   team1: {
     name: "EE",
     pathColor: "#933500",
     rectColor: "#FFC700",
-    next: Team1Gif
+    next: Team1Gif,
   },
   team2: {
     name: "GG",
     pathColor: "#933500",
     rectColor: "#FF5C00",
-    next: Team2Gif
+    next: Team2Gif,
   },
 });
+watch(
+  () => props.content,
+  () => {
+    const el = document.getElementsByClassName("message")[0];
+    console.log(el)
+    el.style.animation = "enter 0.8s linear forwards";
+    contentVisible.value = false;
+    setTimeout(() => {
+      contentVisible.value = true;
+    }, 10);
+  }
+);
 </script>
 
 <template>
-  <div class="message" :class="role" :style="{ width: `${width}px`, height: `${height}px` }">
+  <div
+    v-if="contentVisible"
+    class="message"
+    :class="role"
+    :style="{ width: `${width}px`, height: `${height}px` }"
+  >
     <svg
       width="78"
       height="52"
@@ -54,7 +72,13 @@ const roleMapping = ref({
     </svg>
     <div class="message-role">{{ roleMapping[role].name }}</div>
     <div class="message-content" v-html="content"></div>
-    <img class="message-next" :src="roleMapping[role].next" width="32" height="28" />
+    <img
+      v-if="showNext"
+      class="message-next"
+      :src="roleMapping[role].next"
+      width="32"
+      height="28"
+    />
   </div>
 </template>
 
@@ -65,7 +89,7 @@ const roleMapping = ref({
   padding: 40px 84px 40px 100px;
   border-radius: 40px;
   height: fit-content;
-  animation: enter .8s 1s linear forwards;
+  animation: enter 0.8s .5s linear forwards;
   opacity: 0;
   @keyframes enter {
     0% {
@@ -149,23 +173,14 @@ const roleMapping = ref({
     font-size: 20px;
     line-height: 36px;
     color: $TextDefault;
-    animation: content-enter .8s 1.5s linear forwards;
-
-    @keyframes content-enter {
-      0% {
-        height: 0;
-      }
-      100% {
-        height: 100%;
-      }
-    }
+    animation: content-enter 0.8s 1s linear forwards;
   }
   .message-next {
     opacity: 0;
     position: absolute;
     bottom: 40px;
     right: 32px;
-    animation: next-enter .8s 1s linear forwards;
+    animation: next-enter 0.8s .5s linear forwards;
     @keyframes next-enter {
       0% {
         opacity: 0;
@@ -173,6 +188,14 @@ const roleMapping = ref({
       100% {
         opacity: 1;
       }
+    }
+  }
+  @keyframes content-enter {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: 100%;
     }
   }
 }
