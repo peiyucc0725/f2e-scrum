@@ -9,7 +9,7 @@ defineProps({
 <template>
   <button
     class="custom-btn"
-    :class="{ contantClass }"
+    :class="{ disabled }"
     :disabled="disabled"
     v-bind="$attrs"
   >
@@ -31,6 +31,19 @@ defineProps({
   background: linear-gradient(0deg, rgba(0, 255, 224, 0) 0%, #00ffe0 100%),
     #008d96;
   box-shadow: 0px 5px 0px $PrimaryDefault;
+  &.disabled {
+    background: linear-gradient(
+        0deg,
+        rgba(238, 238, 238, 0) 0%,
+        #dddddd 100%,
+        #eeeeee 100%
+      ),
+      #555555;
+    box-shadow: 0px 5px 0px #bbbbbb;
+    &:hover {
+      box-shadow: 0px 2px 0px #bbbbbb;
+    }
+  }
   &:hover {
     transition: 0.3s;
     box-shadow: 0px 2px 0px $PrimaryDefault;

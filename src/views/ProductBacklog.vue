@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
+import draggable from "vuedraggable";
 import Role from "../components/Role.vue";
 import Message from "../components/Message.vue";
 import ClickPageMask from "../components/ClickPageMask.vue";
@@ -16,6 +17,7 @@ const textSteps = reactive([
     html: "<span>\\ 碰 / </span>我是短衝小精靈 ， 開發 A 組的 PO 。<br /><span>PO 也就是產品負責人（Product Owner）</span> ， 產品負責人會負責評估產品待辦清單的價值與重要性 ， 依序排列要執行的優先順序 ， 對齊產品目標 。 最後排出產品待辦清單 （ProductBacklog） 唷 ！",
     height: 224,
     showClickPage: true,
+    clickPage: true,
     next: false,
     nextText: "",
   },
@@ -24,6 +26,7 @@ const textSteps = reactive([
     html: "剛好我最近手邊有一個 「 人才招募系統 」 的案子 ， 我才剛列出了 <span>「 產品需求清單 」</span> 。<br>  既然你都來了 ， 來試試看調整產品優先度 ， 排出產品待辦清單吧 ！",
     height: 152,
     showClickPage: false,
+    clickPage: false,
     next: true,
     nextText: "準備好了",
   },
@@ -32,6 +35,7 @@ const textSteps = reactive([
     html: "在這階段我們要把需求放進產品待辦清單 ， 並調整其優先順序 。 <br>對了 ！ 我們公司也推薦使用<img src='/images/jira_w.svg' width='110' height='38' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/>來做任務的管理呢 ！",
     height: 168,
     showClickPage: false,
+    clickPage: true,
     next: false,
     nextText: "",
   },
@@ -40,19 +44,29 @@ const textSteps = reactive([
     html: "<h2>換你來試試看吧 ！ </h2>提示 ： 請把需求拖移至產品待辦清單 ， 並調整其優先順序 。",
     height: 163,
     showClickPage: false,
-    next: false,
-    nextText: "",
+    clickPage: false,
+    next: true,
+    nextText: "我完成了",
   },
   {
     role: "po",
     html: "<h2>哇喔完成惹 ， 尼太棒ㄌ！ 我們繼續吧 ！",
     height: 128,
     showClickPage: true,
+    clickPage: true,
     next: false,
     nextText: "",
     hasMask: true,
   },
 ]);
+const dragItem = ref(null);
+const dragItams = reactive([
+  { id: 1, text: "後台職缺管理功能（資訊上架、下架、顯示應徵者資料）" },
+  { id: 2, text: "會員系統（登入、註冊、權限管理）" },
+  { id: 3, text: "應徵者的線上履歷編輯器" },
+  { id: 4, text: "前台職缺列表、應徵" },
+]);
+const answer = reactive(["", "", "", ""]);
 const systemSetp = computed(() => {
   return store.state.step;
 });
@@ -61,16 +75,40 @@ const onClickPage = () => {
     stepLoading.value ||
     !endStep.value ||
     step.value === textSteps.length - 1 ||
-    !textSteps[step.value].showClickPage
+    !textSteps[step.value].clickPage
   )
     return;
   handleNext();
 };
 const handleNext = () => {
+  if (step.value === 3) {
+    const order = answer.map((item) => item.id);
+    if (order.join() !== "1234") return;
+  }
   endStep.value = false;
   stepLoading.value = true;
   step.value++;
 };
+
+const handleDragStart = (e) => {
+  dragItem.value = e.oldIndex;
+};
+
+const handleDragEnd = (e) => {
+  dragItem.value = null;
+};
+
+const handleDrop = (index) => {
+  if (dragItem.value === null) return;
+  const data = dragItams[dragItem.value];
+  dragItams.splice(dragItem.value, 1);
+  answer[index] = data;
+};
+
+const answerEmpty = computed(() => {
+  const hasEmpty = answer.findIndex((item) => item === "");
+  return hasEmpty != -1;
+});
 
 watch(step, (val) => {
   switch (val) {
@@ -86,9 +124,14 @@ watch(step, (val) => {
         stepLoading.value = false;
         endStep.value = true;
         console.log("step2End");
-      }, 1000);
+      }, 2500);
       break;
     case 3:
+      setTimeout(() => {
+        stepLoading.value = false;
+        endStep.value = true;
+        console.log("step3End");
+      }, 2000);
       break;
     case 4:
       break;
@@ -129,22 +172,61 @@ onMounted(() => {
               src="../assets/images/attached/capation.png"
               height="436"
             />
-            <div class="backlog-list">
-              <div class="backlog-list__item"></div>
-              <div class="backlog-list__item"></div>
-              <div class="backlog-list__item"></div>
-              <div class="backlog-list__item"></div>
-            </div>
+            <draggable
+              :list="answer"
+              item-key="element"
+              class="backlog-list"
+              draggable=".backlog-draggable"
+            >
+              <template #item="{ element, index }">
+                <div
+                  class="backlog-list__item"
+                  :class="{ 'backlog-draggable': element }"
+                  @drop="handleDrop(index)"
+                  @dragover.prevent
+                >
+                  <div class="text" v-if="element && step > 2">
+                    {{ element.text }}
+                  </div>
+                  <div class="example-text" v-if="step === 2 && index === 0">
+                    前台職缺列表、應徵
+                  </div>
+                  <img
+                    v-if="step === 2 && index === 0"
+                    class="example-hand"
+                    src="../assets/images/attached/hand.svg"
+                  />
+                  <img
+                    v-if="step === 2 && index === 0"
+                    class="example-arrow"
+                    src="../assets/images/attached/arrow.svg"
+                  />
+                </div>
+              </template>
+            </draggable>
           </div>
         </Backlog>
-        <div class="drag-wrapper" v-if="step >= 2">
-          <div class="drag-item item3">應徵者的線上履歷編輯器</div>
-          <div class="drag-item item1">
-            後台職缺管理功能（資訊上架、下架、顯示應徵者資料）
-          </div>
-          <div class="drag-item item2">會員系統（登入、註冊、權限管理）</div>
-          <div class="drag-item item4">前台職缺列表、應徵</div>
-        </div>
+        <draggable
+          v-if="step >= 2"
+          v-model="dragItams"
+          item-key="id"
+          class="drag-wrapper"
+          draggable=".draggable"
+          :class="{ example: step === 2 }"
+          @start="handleDragStart"
+          @end="handleDragEnd"
+        >
+          <template #item="{ element }">
+            <div
+              class="drag-item"
+              :class="
+                `item${element.id}`, { draggable: step > 2 && !stepLoading }
+              "
+            >
+              {{ element.text }}
+            </div>
+          </template>
+        </draggable>
         <transition name="fade-in">
           <ClickPageMask
             v-show="endStep && textSteps[step].showClickPage"
@@ -155,7 +237,7 @@ onMounted(() => {
           v-if="endStep && textSteps[step].next && textSteps[step].nextText"
           class="next-btn"
           :text="textSteps[step].nextText"
-          :disabled="stepLoading"
+          :disabled="stepLoading || (step === 3 && answerEmpty)"
           @click="handleNext"
         ></custom-btn>
       </div>
@@ -201,25 +283,131 @@ onMounted(() => {
           height: 96px;
           border: 2px dashed $PrimaryDefault;
           border-radius: 20px;
-          padding: 12px 24px;
+          & > .text,
+          & > .example-text {
+            width: calc(100% + 8px);
+            height: calc(100% + 8px);
+            padding: 12px 24px;
+            background: $BgDark60;
+            border: 4px solid #00ffe0;
+            backdrop-filter: blur(2px) brightness(0.6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            line-height: 36px;
+            margin-left: -4px;
+            margin-top: -4px;
+          }
+          & > .example-hand {
+            position: absolute;
+            top: 102px;
+            right: 99px;
+            animation: dragHand 0.5s 1.5s forwards;
+            opacity: 0;
+            @keyframes dragHand {
+              0% {
+                opacity: 0;
+                transform: translate(100px, 100px) scale(0.9);
+              }
+              100% {
+                opacity: 1;
+                transform: translate(0) scale(1);
+              }
+            }
+          }
+          & > .example-text {
+            opacity: 0;
+            animation: dragInAni 0.5s 1.5s forwards;
+            transform-origin: bottom right;
+            @keyframes dragInAni {
+              0% {
+                opacity: 0;
+                transform: translate(10px, 10px) scale(0.9);
+              }
+              100% {
+                opacity: 1;
+                transform: translate(0) scale(1);
+              }
+            }
+          }
+          & > .example-arrow {
+            position: absolute;
+            top: 128px;
+            right: -80px;
+            opacity: 0;
+            animation: showArrow 0.5s 1.5s forwards;
+            @keyframes showArrow {
+              0% {
+                opacity: 0;
+              }
+              100% {
+                opacity: 1;
+              }
+            }
+          }
         }
       }
     }
   }
   .drag-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   opacity: 0;
+    animation: enter 0.8s 0.5s linear forwards;
+    opacity: 0;
+    z-index: 2;
+
+    @keyframes enter {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    &.example > *:not(.item4) {
+      animation: setOpacity 0.3s 1s linear forwards;
+      @keyframes setOpacity {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.3;
+        }
+      }
+    }
     .drag-item {
-      max-width: 343px;
-      max-height: 96px;
       background: rgba(10, 13, 20, 0.6);
       border: 4px solid $PrimaryDefault;
       border-radius: 20px;
       padding: 12px 24px;
       color: $TextDefault;
+      font-size: 20px;
+      line-height: 36px;
+      max-width: 350px;
+      max-height: 100px;
+      position: absolute;
+      z-index: 2;
+      &.item1 {
+        top: 604px;
+        left: 49px;
+      }
+      &.item2 {
+        top: 487px;
+        right: 49px;
+      }
+      &.item3 {
+        top: 485px;
+        left: 147px;
+      }
+      &.item4 {
+        top: 631px;
+        right: 187px;
+      }
     }
   }
   .next-btn {

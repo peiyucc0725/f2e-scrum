@@ -43,7 +43,6 @@ watch(
   () => props.content,
   () => {
     const el = document.getElementsByClassName("message")[0];
-    console.log(el)
     el.style.animation = "enter 0.8s linear forwards";
     contentVisible.value = false;
     setTimeout(() => {
