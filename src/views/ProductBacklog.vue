@@ -83,7 +83,7 @@ const onClickPage = () => {
 const handleNext = () => {
   if (step.value === 3) {
     const order = answer.map((item) => item.id);
-    if (order.join() !== "1234") return;
+    if (order.join('') !== "1234") return;
   }
   endStep.value = false;
   stepLoading.value = true;
@@ -134,6 +134,11 @@ watch(step, (val) => {
       }, 2000);
       break;
     case 4:
+      setTimeout(() => {
+        stepLoading.value = false;
+        endStep.value = true;
+        console.log("step4End");
+      }, 1000);
       break;
     default:
       break;
