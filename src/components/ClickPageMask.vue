@@ -9,6 +9,7 @@ defineProps({
 
 <template>
   <div class="click-page-mask" :class="{ hasMask: hasMask }">
+    <div class="back" v-if="hasMask"></div>
     <div class="text">點擊畫面任意處繼續</div>
   </div>
 </template>
@@ -22,6 +23,12 @@ defineProps({
   height: 100%;
   margin: 0 auto;
   &.hasMask {
+    background: rgba(28, 50, 69, 0.6);
+    backdrop-filter: blur(5px);
+  }
+  .back {
+    width: 100%;
+    height: 100%;
     background: $PrimaryLinear;
   }
   .text {

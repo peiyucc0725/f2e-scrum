@@ -3,6 +3,8 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import Start from './views/Start.vue'
 import ProductBacklog from './views/ProductBacklog.vue'
+import Planning from './views/Planning.vue'
+import SprintBacklog from './views/SprintBacklog.vue'
 
 const store = useStore();
 const systemSetp = computed(() => {
@@ -20,6 +22,8 @@ const systemSetp = computed(() => {
     <div class="step-container">
       <Start v-if="systemSetp < 10" />
       <ProductBacklog v-else-if="systemSetp < 25" />
+      <Planning v-else-if="systemSetp < 40"/>
+      <SprintBacklog v-else-if="systemSetp < 55"/>
     </div>
     <div class="footer">
       <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>
@@ -55,7 +59,7 @@ const systemSetp = computed(() => {
   width: 100%;
   height: 12px;
   background-color: $PrimaryDark;
-  z-index: 1;
+  z-index: 2;
   .progress {
     position: relative;
     width: 0;

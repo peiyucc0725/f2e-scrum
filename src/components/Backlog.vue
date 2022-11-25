@@ -6,8 +6,14 @@ let props = defineProps({
     type: String,
     default: "product",
   },
-  title: String,
-  capation: String,
+  title: {
+    type: String,
+    default: "產品待辦清單",
+  },
+  capation: {
+    type: String,
+    default: "Product Backlog",
+  },
 });
 </script>
 
@@ -18,8 +24,8 @@ let props = defineProps({
     <div class="backlog-bg2"></div>
     <div class="backlog-bg3"></div>
     <div class="title">
-      <h2>產品待辦清單</h2>
-      <div class="capation">Product Backlog</div>
+      <h2>{{ title }}</h2>
+      <div class="capation">{{ capation }}</div>
     </div>
     <div class="content">
       <slot></slot>
@@ -53,9 +59,6 @@ let props = defineProps({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    .capation {
-      color: $PrimaryDark;
-    }
   }
   .content {
     position: absolute;
@@ -97,6 +100,9 @@ let props = defineProps({
   &.product {
     .title {
       background-color: $PrimaryDefault;
+      .capation {
+        color: $PrimaryDark;
+      }
     }
     .backlog-bg {
       background: rgba(0, 255, 224, 0.3);
@@ -118,6 +124,9 @@ let props = defineProps({
   &.sprint {
     .title {
       background-color: $RoleTeam1;
+      .capation {
+        color: $RoleTeamDark;
+      }
     }
     .backlog-bg {
       background: rgba(255, 122, 0, 0.4);

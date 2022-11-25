@@ -8,7 +8,7 @@ import ClickPageMask from "../components/ClickPageMask.vue";
 import Backlog from "../components/Backlog.vue";
 
 const store = useStore();
-const step = ref(2);
+const step = ref(3);
 const stepLoading = ref(false);
 const endStep = ref(false);
 const textSteps = reactive([
@@ -74,7 +74,7 @@ const onClickPage = () => {
   if (
     stepLoading.value ||
     !endStep.value ||
-    step.value === textSteps.length - 1 ||
+    step.value >= textSteps.length ||
     !textSteps[step.value].clickPage
   )
     return;
@@ -83,7 +83,10 @@ const onClickPage = () => {
 const handleNext = () => {
   if (step.value === 3) {
     const order = answer.map((item) => item.id);
-    if (order.join('') !== "1234") return;
+    if (order.join("") !== "1234") return;
+  } else if (step.value === 4) {
+      store.dispatch("setStep", 25);
+    return;
   }
   endStep.value = false;
   stepLoading.value = true;
@@ -116,29 +119,25 @@ watch(step, (val) => {
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-        console.log("step1End");
       }, 2000);
       break;
     case 2:
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-        console.log("step2End");
       }, 2500);
       break;
     case 3:
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-        console.log("step3End");
       }, 2000);
       break;
     case 4:
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-        console.log("step4End");
-      }, 1000);
+      }, 1500);
       break;
     default:
       break;
@@ -261,7 +260,7 @@ onMounted(() => {
     left: 33px;
   }
   .message {
-    top: 40px;
+    top: 35px;
     right: 40px;
   }
   .backlog {
@@ -356,12 +355,6 @@ onMounted(() => {
     }
   }
   .drag-wrapper {
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    //   width: 100%;
-    //   height: 100%;
-    //   opacity: 0;
     animation: enter 0.8s 0.5s linear forwards;
     opacity: 0;
     z-index: 2;

@@ -20,7 +20,7 @@ const roleMapping = ref({
     rectColor: "#00FFE0",
     next: PoGif,
   },
-  sm: {
+  mm: {
     name: "MM",
     pathColor: "#4C0071",
     rectColor: "#D355FF",
@@ -54,7 +54,7 @@ watch(
 
 <template>
   <div
-    v-if="contentVisible"
+    v-if="contentVisible && content"
     class="message"
     :class="role"
     :style="{ width: `${width}px`, height: `${height}px` }"
@@ -89,6 +89,7 @@ watch(
   border-radius: 40px;
   height: fit-content;
   animation: enter 0.8s .5s linear forwards;
+  z-index: 1;
   opacity: 0;
   @keyframes enter {
     0% {
@@ -128,7 +129,7 @@ watch(
       rgba(10, 13, 20, 0.6);
     border: 2px solid $PrimaryDefault;
   }
-  &.sm {
+  &.mm {
     box-shadow: 0px 0px 24px 0 rgba(211, 85, 255, 0.8),
       0px 0px 8px 0 rgba(211, 85, 255, 0.95);
     background: linear-gradient(

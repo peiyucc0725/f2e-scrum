@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export const store = createStore({
   state () {
     return {
-      step: 10
+      step: 40
     }
   },
   actions: {

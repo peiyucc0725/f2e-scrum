@@ -1,33 +1,52 @@
 <script setup>
-import { ref } from "vue";
-import RolePO from '../assets/images/role/role_po.png'
-import RolePOLight from '../assets/images/role/role_po_light.png'
-import RoleTeam1 from '../assets/images/role/role_team1.png'
-import RoleTeam1Light from '../assets/images/role/role_team1_light.png'
-import RoleTeam2 from '../assets/images/role/role_team2.png'
-import RoleTeam2Light from '../assets/images/role/role_team2_light.png'
-defineProps({
+import { ref, watch } from "vue";
+import RolePO from "../assets/images/role/role_po.png";
+import RolePOLight from "../assets/images/role/role_po_light.png";
+import RoleMM from "../assets/images/role/role_sm.png";
+import RoleMMLight from "../assets/images/role/role_sm_light.png";
+import RoleTeam1 from "../assets/images/role/role_team1.png";
+import RoleTeam1Light from "../assets/images/role/role_team1_light.png";
+import RoleTeam2 from "../assets/images/role/role_team2.png";
+import RoleTeam2Light from "../assets/images/role/role_team2_light.png";
+let props = defineProps({
   role: String,
 });
+const visible = ref(true);
 const roleItems = ref({
   po: {
     role: RolePO,
-    light: RolePOLight
+    light: RolePOLight,
+  },
+  mm: {
+    role: RoleMM,
+    light: RoleMMLight,
   },
   team1: {
     role: RoleTeam1,
-    light: RoleTeam1Light
+    light: RoleTeam1Light,
   },
   team2: {
     role: RoleTeam2,
-    light: RoleTeam2Light
+    light: RoleTeam2Light,
   },
-
-})
+});
+watch(
+  () => props.role,
+  () => {
+    visible.value = false;
+    setTimeout(() => {
+      visible.value = true;
+    }, 10);
+  }
+);
 </script>
 
 <template>
-  <div class="role-wrapper">
+  <div
+    v-if="visible"
+    class="role-wrapper"
+    :class="(role, { bottom: role === 'mm' })"
+  >
     <img class="hole" src="../assets/images/role/hole.png" />
     <img class="light" :src="roleItems[role].light" />
     <img class="role" :src="roleItems[role].role" />
@@ -39,28 +58,81 @@ const roleItems = ref({
   position: absolute;
   width: 320px;
   height: 461px;
+  z-index: 1;
+  &.po {
+    top: -3px;
+    left: 33px;
+  }
+  &.mm {
+    right: 33px;
+    bottom: 25px;
+  }
+  &.team1 {
+    top: -3px;
+    right: 280px;
+  }
+  &.team2 {
+    top: -3px;
+    right: 10px;
+  }
+  &.team1,
+  &.team2 {
+    width: 260px;
+    height: 370px;
+    &:not(.bottom) {
+      .role {
+        left: 10px;
+      }
+      .light {
+        width: 380px;
+        left: -55px;
+      }
+    }
+  }
   & > * {
     position: absolute;
     width: 100%;
     height: auto;
   }
-  .hole {
-    animation: hole-enter 0.5s linear forwards;
+  &.bottom {
+    .hole {
+      bottom: 0;
+    }
+    .light {
+      opacity: 0;
+      width: 467px;
+      left: -73px;
+      bottom: 14px;
+      animation: light-bottom-enter 0.5s 0.5s linear forwards;
+      transform-origin: bottom;
+    }
+    .role {
+      opacity: 0;
+      bottom: 14px;
+      animation: role-bottom-enter 0.5s 0.5s linear forwards;
+      transform-origin: bottom;
+    }
   }
-  .light {
-    opacity: 0;
-    width: 467px;
-    left: -73px;
-    top: 14px;
-    animation: light-enter .5s .5s linear forwards;
-    transform-origin: top;
+  &:not(.bottom) {
+    .hole {
+      animation: hole-enter 0.5s linear forwards;
+    }
+    .light {
+      opacity: 0;
+      width: 467px;
+      left: -73px;
+      top: 14px;
+      animation: light-enter 0.5s 0.5s linear forwards;
+      transform-origin: top;
+    }
+    .role {
+      opacity: 0;
+      top: 14px;
+      animation: role-enter 0.5s 0.5s linear forwards;
+      transform-origin: top;
+    }
   }
-  .role {
-    opacity: 0;
-    top: 14px;
-    animation: role-enter .5s .5s linear forwards;
-    transform-origin: top;
-  }
+
   @keyframes hole-enter {
     0% {
       transform: scaleX(0);
@@ -87,6 +159,38 @@ const roleItems = ref({
     0% {
       opacity: 0.5;
       transform: scaleY(1) translateY(-50%);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+    75% {
+      opacity: 1;
+      transform: scaleY(1.3) translateY(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+  @keyframes light-bottom-enter {
+    0% {
+      opacity: 0.5;
+      transform: scaleY(1) translateY(50%);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+  @keyframes role-bottom-enter {
+    0% {
+      opacity: 0.5;
+      transform: scaleY(1) translateY(50%);
     }
     50% {
       opacity: 1;
