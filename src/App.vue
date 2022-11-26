@@ -5,6 +5,7 @@ import Start from './views/Start.vue'
 import ProductBacklog from './views/ProductBacklog.vue'
 import Planning from './views/Planning.vue'
 import SprintBacklog from './views/SprintBacklog.vue'
+import Process from './views/Process.vue'
 
 const store = useStore();
 const systemSetp = computed(() => {
@@ -24,6 +25,7 @@ const systemSetp = computed(() => {
       <ProductBacklog v-else-if="systemSetp < 25" />
       <Planning v-else-if="systemSetp < 40"/>
       <SprintBacklog v-else-if="systemSetp < 55"/>
+      <Process v-else-if="systemSetp < 70"/>
     </div>
     <div class="footer">
       <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>

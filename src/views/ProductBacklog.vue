@@ -50,7 +50,7 @@ const textSteps = reactive([
   },
   {
     role: "po",
-    html: "<h2>哇喔完成惹 ， 尼太棒ㄌ！ 我們繼續吧 ！",
+    html: "<h2>哇喔完成惹 ， 尼太棒ㄌ！ 我們繼續吧 ！</h2>",
     height: 128,
     showClickPage: true,
     clickPage: true,

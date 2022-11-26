@@ -50,12 +50,12 @@ const textSteps = reactive([
   },
   {
     role: "team2",
-    html: "<h2>噢嗚嗚 ， 太厲害ㄌ ！ 又完成了一關 ！ 還有下一關等著你 ！",
+    html: "<h2>噢嗚嗚 ， 太厲害ㄌ ！ 又完成了一關 ！ 還有下一關等著你 ！</h2>",
     height: 128,
     width: 1070,
     showClickPage: true,
     clickPage: true,
-    next: false,
+    next: true,
     nextText: "",
     hasMask: true,
   },
@@ -92,33 +92,52 @@ const onClickPage = () => {
   handleNext();
 };
 const handleNext = () => {
-  //   if (step.value === 2) {
-  //       store.dispatch("setStep", 55);
-  //     return;
-  //   }
+  if (step.value === 3) {
+    store.dispatch("setStep", 55);
+    return;
+  }
   endStep.value = false;
   stepLoading.value = true;
   step.value++;
 };
 
-const handleDragStart = (e) => {
-  dragItem.value = e.oldIndex;
+const handleDragStart = (e, type) => {
+  let data;
+  if (type === "product") {
+    data = dragItams[e.oldIndex];
+  } else {
+    data = answer[e.oldIndex];
+  }
+  dragItem.value = {
+    type,
+    index: e.oldIndex,
+    data,
+  };
 };
 
 const handleDragEnd = (e) => {
   dragItem.value = null;
 };
 
-const handleDrop = (index) => {
+const handleDrop = (dropIndex, dropType) => {
   if (dragItem.value === null) return;
-  const data = dragItams[dragItem.value];
-  dragItams.splice(dragItem.value, 1);
-  answer[index] = data;
+  const { type, data, index } = dragItem.value;
+  if (dropType === type) return;
+  if (type === "product") {
+    const hasEmpty = answer.findIndex((item) => item === "");
+    if (hasEmpty === -1) return;
+    dragItams.splice(index, 1);
+    answer[hasEmpty] = data;
+  } else {
+    answer.splice(index, 1);
+    answer.push("");
+    dragItams.push(data);
+  }
 };
 
-const answerEmpty = computed(() => {
-  const hasEmpty = answer.findIndex((item) => item === "");
-  return hasEmpty != -1;
+const answerValid = computed(() => {
+  const EmptyNum = answer.filter((item) => item === "");
+  return EmptyNum.length < 2 && pointTotal.value <= 20;
 });
 
 watch(step, (val) => {
@@ -141,13 +160,7 @@ watch(step, (val) => {
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-      }, 2000);
-      break;
-    case 4:
-      setTimeout(() => {
-        stepLoading.value = false;
-        endStep.value = true;
-      }, 1500);
+      }, 1000);
       break;
     default:
       break;
@@ -199,22 +212,24 @@ onMounted(() => {
           :showNext="textSteps[step].next"
         />
         <Backlog v-if="step >= 2">
-          <div class="backlog-content">
+          <div
+            class="backlog-content"
+            @drop="handleDrop(null, 'product')"
+            @dragover.prevent
+          >
             <draggable
               :list="dragItams"
               :sort="false"
               item-key="id"
               class="backlog-list"
               draggable=".backlog-draggable"
-              @start="handleDragStart"
-              @end="handleDragEnd"
+              @start="handleDragStart($event, 'product')"
+              @end="handleDragEnd($event, 'product')"
             >
               <template #item="{ element, index }">
                 <div
                   class="backlog-list__item"
                   :class="{ 'backlog-draggable': element }"
-                  @drop="handleDrop(index, 'product')"
-                  @dragover.prevent
                 >
                   <div class="backlog-list__item-content">
                     <div class="point">
@@ -229,7 +244,12 @@ onMounted(() => {
             </draggable>
           </div>
         </Backlog>
-        <Backlog v-if="step >= 2" type="sprint" title="開發Ａ組的短衝待辦清單" capation="Sprint Backlog">
+        <Backlog
+          v-if="step >= 2"
+          type="sprint"
+          title="開發Ａ組的短衝待辦清單"
+          capation="Sprint Backlog"
+        >
           <div class="backlog-content">
             <draggable
               :list="answer"
@@ -237,8 +257,8 @@ onMounted(() => {
               item-key="id"
               class="backlog-list"
               draggable=".backlog-draggable"
-              @start="handleDragStart"
-              @end="handleDragEnd"
+              @start="handleDragStart($event, 'sprint')"
+              @end="handleDragEnd($event, 'sprint')"
             >
               <template #item="{ element, index }">
                 <div
@@ -282,7 +302,7 @@ onMounted(() => {
           v-if="endStep && textSteps[step].nextText"
           class="next-btn"
           :text="textSteps[step].nextText"
-          :disabled="stepLoading || (step === 2 && answerEmpty)"
+          :disabled="stepLoading || (step === 2 && !answerValid)"
           @click="handleNext"
         ></custom-btn>
       </div>
