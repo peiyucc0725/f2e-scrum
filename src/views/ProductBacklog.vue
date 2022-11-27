@@ -32,7 +32,7 @@ const textSteps = reactive([
   },
   {
     role: "po",
-    html: "在這階段我們要把需求放進產品待辦清單 ， 並調整其優先順序 。 <br>對了 ！ 我們公司也推薦使用<img src='/images/jira_w.svg' width='110' height='38' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/>來做任務的管理呢 ！",
+    html: "在這階段我們要把需求放進產品待辦清單 ， 並調整其優先順序 。 <br>對了 ！ 我們公司也推薦使用<img src='/f2e-scrum/images/jira_w.svg' width='110' height='38' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/>來做任務的管理呢 ！",
     height: 168,
     showClickPage: false,
     clickPage: true,

@@ -30,7 +30,7 @@ const textSteps = reactive([
     width: 790,
     roleSub: "team1",
     htmlSub:
-      "By the way , 我們平常管理任務是使用<img src='/images/jira_w.svg' width='110' height='38' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/>這套軟體 ， 你有時間記得先去註冊和熟悉唷 !",
+      "By the way , 我們平常管理任務是使用<img src='/f2e-scrum/images/jira_w.svg' width='110' height='38' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/>這套軟體 ， 你有時間記得先去註冊和熟悉唷 !",
     heightSub: 172,
     widthSub: 790,
     showClickPage: false,

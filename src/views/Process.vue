@@ -35,7 +35,7 @@ const textSteps = reactive([
   },
   {
     role: "team1",
-    html: "優化工作流程、讓團隊有變得更好的機會。<br>推薦工具 ：<img src='/images/logo_confluence_w.svg' width='210' height='28' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/> ",
+    html: "優化工作流程、讓團隊有變得更好的機會。<br>推薦工具 ：<img src='/f2e-scrum/images/logo_confluence_w.svg' width='210' height='28' style='margin: 8px 10px 12px 10px; vertical-align: middle;'/> ",
     height: 162,
     width: 1070,
     showClickPage: false,
