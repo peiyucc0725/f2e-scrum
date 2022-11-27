@@ -10,5 +10,6 @@ export default defineConfig({
         additionalData: `@import "src/assets/scss/variables.scss";`
       }
     }
-  }
+  },
+  base: '/f2e-scrum/'
 })
