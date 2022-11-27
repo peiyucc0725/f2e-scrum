@@ -1,8 +1,10 @@
 // place at : deploy/ghpages.js
 // you can see more info at https://github.com/tschaub/gh-pages
-const ghpages = require('gh-pages')
-const path = require('path')
+import ghpages from 'gh-pages'
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const options = {
     branch: 'gh-pages',
     repo: 'git@github.com:peiyu0725/f2e-scrum.git' // project github repo
