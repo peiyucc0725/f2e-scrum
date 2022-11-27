@@ -6,6 +6,8 @@ import ProductBacklog from './views/ProductBacklog.vue'
 import Planning from './views/Planning.vue'
 import SprintBacklog from './views/SprintBacklog.vue'
 import Process from './views/Process.vue'
+import Retro from './views/Retro.vue'
+import Finish from './views/Finish.vue'
 
 const store = useStore();
 const systemSetp = computed(() => {
@@ -19,13 +21,15 @@ const systemSetp = computed(() => {
     <div class="step-line" v-if="systemSetp !== 0">
       <div class="progress" :style="`width: ${systemSetp}%`"></div>
     </div>
-    <!-- start: 10%, ProductBacklog: 25%, Planning: 40%, SprintBacklog: 55%, Process: 70%, Retro: 85%, Finish: 100% -->
+    <!-- start: 10%, ProductBacklog: 20%, Planning: 35%, SprintBacklog: 55%, Process: 70%, Retro: 85%, Finish: 100% -->
     <div class="step-container">
-      <Start v-if="systemSetp < 10" />
-      <ProductBacklog v-else-if="systemSetp < 25" />
-      <Planning v-else-if="systemSetp < 40"/>
-      <SprintBacklog v-else-if="systemSetp < 55"/>
-      <Process v-else-if="systemSetp < 70"/>
+      <Start v-if="systemSetp < 20" />
+      <ProductBacklog v-else-if="systemSetp < 35" />
+      <Planning v-else-if="systemSetp < 55"/>
+      <SprintBacklog v-else-if="systemSetp < 70"/>
+      <Process v-else-if="systemSetp < 85"/>
+      <Retro v-else-if="systemSetp < 100" />
+      <Finish v-else-if="systemSetp === 100" />
     </div>
     <div class="footer">
       <div class="inner">© 2022 The F2E | UI Design - EG | F2E - PeiYu</div>

@@ -76,9 +76,36 @@ button {
     .background {
         width: 100%;
         height: 100%;
-        background-size: contain;
+        background-size: cover;
         background-image: url("../images/bg/bg_village.png");
     }
+
+    .next-btn {
+        position: absolute;
+        bottom: 89px;
+        right: 40px;
+        animation: show-btn 0.5s linear forwards;
+
+        @keyframes show-btn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.linear {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 160px;
+    background: $PrimaryLinear;
+    transform: rotate(-180deg);
+    z-index: 1;
 }
 
 .fade-enter-active,
@@ -127,4 +154,102 @@ h3 {
     font-weight: 700;
     font-size: 16px;
     line-height: 22px;
+}
+
+@keyframes enter {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hole-enter {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes light-enter {
+    0% {
+        opacity: 0.5;
+        transform: scaleY(1) translateY(-50%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+}
+
+@keyframes role-enter {
+    0% {
+        opacity: 0.5;
+        transform: scaleY(1) translateY(-50%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+
+    75% {
+        opacity: 1;
+        transform: scaleY(1.3) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+}
+
+@keyframes light-bottom-enter {
+    0% {
+        opacity: 0.5;
+        transform: scaleY(1) translateY(50%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+}
+
+@keyframes role-bottom-enter {
+    0% {
+        opacity: 0.5;
+        transform: scaleY(1) translateY(50%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+
+    75% {
+        opacity: 1;
+        transform: scaleY(1.3) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
 }

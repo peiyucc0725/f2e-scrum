@@ -17,7 +17,7 @@ const handleStart = () => {
 const handleEnd = () => {
   step.value = "end";
   setTimeout(() => {
-    store.dispatch("setStep", 10);
+    store.dispatch("setStep", 20);
   }, 1000);
 };
 </script>

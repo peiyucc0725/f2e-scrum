@@ -8,7 +8,7 @@ import ClickPageMask from "../components/ClickPageMask.vue";
 import Backlog from "../components/Backlog.vue";
 
 const store = useStore();
-const step = ref(3);
+const step = ref(0);
 const stepLoading = ref(false);
 const endStep = ref(false);
 const textSteps = reactive([
@@ -61,7 +61,7 @@ const onClickPage = () => {
 
 const handleNext = () => {
   if (step.value === 4) {
-    store.dispatch("setStep", 40);
+    store.dispatch("setStep", 55);
     return;
   }
   endStep.value = false;
@@ -103,7 +103,7 @@ watch(step, (val) => {
 onMounted(() => {
   stepLoading.value = true;
   setTimeout(() => {
-    store.dispatch("setStep", 26);
+    store.dispatch("setStep", 36);
   }, 600);
   setTimeout(() => {
     stepLoading.value = false;
@@ -115,7 +115,7 @@ onMounted(() => {
 <template>
   <div class="planning-page">
     <transition name="fadeIn">
-      <div v-show="systemSetp > 25" class="inner" @click="onClickPage">
+      <div v-show="systemSetp > 35" class="inner" @click="onClickPage">
         <div class="background"></div>
         <Role
           v-if="textSteps[step].role"

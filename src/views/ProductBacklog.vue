@@ -8,7 +8,7 @@ import ClickPageMask from "../components/ClickPageMask.vue";
 import Backlog from "../components/Backlog.vue";
 
 const store = useStore();
-const step = ref(3);
+const step = ref(0);
 const stepLoading = ref(false);
 const endStep = ref(false);
 const textSteps = reactive([
@@ -85,7 +85,7 @@ const handleNext = () => {
     const order = answer.map((item) => item.id);
     if (order.join("") !== "1234") return;
   } else if (step.value === 4) {
-      store.dispatch("setStep", 25);
+      store.dispatch("setStep", 35);
     return;
   }
   endStep.value = false;
@@ -147,7 +147,7 @@ watch(step, (val) => {
 onMounted(() => {
   stepLoading.value = true;
   setTimeout(() => {
-    store.dispatch("setStep", 11);
+    store.dispatch("setStep", 21);
   }, 300);
   setTimeout(() => {
     stepLoading.value = false;
@@ -159,7 +159,7 @@ onMounted(() => {
 <template>
   <div class="product-backlog">
     <transition name="fadeIn">
-      <div v-show="systemSetp > 10" class="inner" @click="onClickPage">
+      <div v-show="systemSetp > 20" class="inner" @click="onClickPage">
         <div class="background"></div>
         <Role :role="textSteps[step].role" />
         <Message
@@ -233,7 +233,7 @@ onMounted(() => {
         </draggable>
         <transition name="fade-in">
           <ClickPageMask
-            v-show="endStep && textSteps[step].showClickPage"
+            v-show="textSteps[step].hasMask || endStep && textSteps[step].showClickPage"
             :hasMask="textSteps[step].hasMask"
           />
         </transition>
@@ -405,20 +405,6 @@ onMounted(() => {
       &.item4 {
         top: 631px;
         right: 187px;
-      }
-    }
-  }
-  .next-btn {
-    position: absolute;
-    bottom: 89px;
-    right: 40px;
-    animation: show-btn 0.5s linear forwards;
-    @keyframes show-btn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
       }
     }
   }

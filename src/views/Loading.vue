@@ -48,14 +48,6 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  .linear {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 160px;
-    background: $PrimaryLinear;
-    transform: rotate(-180deg);
-  }
   .gif-ani {
     width: 255px;
     height: 120px;

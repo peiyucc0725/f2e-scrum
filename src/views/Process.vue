@@ -7,9 +7,11 @@ import Message from "../components/Message.vue";
 import ClickPageMask from "../components/ClickPageMask.vue";
 
 const store = useStore();
-const step = ref(3);
+const step = ref(0);
 const stepLoading = ref(false);
 const endStep = ref(false);
+const correct = reactive([2,1,3])
+const checkAnswer = ref(true);
 const textSteps = reactive([
   {
     role: "team1",
@@ -52,7 +54,7 @@ const textSteps = reactive([
     nextText: "我完成了",
   },
   {
-    role: "team2",
+    role: "team1",
     html: "<h2>哼哼沒想到你這麼快就學會惹 ， 快結束了加油加油 ！</h2>",
     height: 128,
     width: 1070,
@@ -88,26 +90,23 @@ const onClickPage = () => {
   handleNext();
 };
 const handleNext = () => {
-  //   if (step.value === 3) {
-  //     store.dispatch("setStep", 70);
-  //     return;
-  //   }
+  if (step.value === 3) {
+    const ans = answer.map((item) => item.id).join("");
+    checkAnswer.value = ans === "213";
+    if (!checkAnswer.value) return;
+  } else if (step.value === 4) {
+    store.dispatch("setStep", 85);
+    return;
+  }
   endStep.value = false;
   stepLoading.value = true;
   step.value++;
 };
 
-const handleDragStart = (e, type) => {
-  let data;
-  if (type === "product") {
-    data = dragItams[e.oldIndex];
-  } else {
-    data = answer[e.oldIndex];
-  }
+const handleDragStart = (e) => {
   dragItem.value = {
-    type,
     index: e.oldIndex,
-    data,
+    data: dragItams[e.oldIndex],
   };
 };
 
@@ -115,25 +114,20 @@ const handleDragEnd = (e) => {
   dragItem.value = null;
 };
 
-const handleDrop = (dropIndex, dropType) => {
+const handleDrop = (dropIndex) => {
   if (dragItem.value === null) return;
-  const { type, data, index } = dragItem.value;
-  if (dropType === type) return;
-  if (type === "product") {
-    const hasEmpty = answer.findIndex((item) => item === "");
-    if (hasEmpty === -1) return;
-    dragItams.splice(index, 1);
-    answer[hasEmpty] = data;
-  } else {
-    answer.splice(index, 1);
-    answer.push("");
-    dragItams.push(data);
-  }
+  const { data, index } = dragItem.value;
+  dragItams.splice(index, 1);
+  answer[dropIndex] = data;
 };
+
+const handleSort = () => {
+    checkAnswer.value = true
+}
 
 const answerValid = computed(() => {
   const EmptyNum = answer.filter((item) => item === "");
-  return EmptyNum.length < 2;
+  return EmptyNum.length === 0;
 });
 
 watch(step, (val) => {
@@ -144,7 +138,7 @@ watch(step, (val) => {
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-      }, 2000);
+      }, 3500);
       break;
     case 2:
       setTimeout(() => {
@@ -156,7 +150,13 @@ watch(step, (val) => {
       setTimeout(() => {
         stepLoading.value = false;
         endStep.value = true;
-      }, 1000);
+      }, 2000);
+      break;
+    case 4:
+      setTimeout(() => {
+        stepLoading.value = false;
+        endStep.value = true;
+      }, 2500);
       break;
     default:
       break;
@@ -166,7 +166,7 @@ watch(step, (val) => {
 onMounted(() => {
   stepLoading.value = true;
   setTimeout(() => {
-    store.dispatch("setStep", 56);
+    store.dispatch("setStep", 71);
   }, 300);
   setTimeout(() => {
     stepLoading.value = false;
@@ -178,7 +178,7 @@ onMounted(() => {
 <template>
   <div class="process-page">
     <transition name="fadeIn">
-      <div v-show="systemSetp > 10" class="inner" @click="onClickPage">
+      <div v-show="systemSetp > 70" class="inner" @click="onClickPage">
         <div class="background"></div>
         <Role
           v-if="textSteps[step].role"
@@ -193,7 +193,7 @@ onMounted(() => {
           :content="textSteps[step].html"
           :showNext="textSteps[step].next"
         />
-        <div class="process-wrapper" v-if="step < 3">
+        <div class="process-wrapper" v-if="step >= 1 && step < 3">
           <div class="process-wrapper__row">
             <div class="process-wrapper__col">
               <img src="../assets/images/attached/sprint_daily.png" />
@@ -246,8 +246,14 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="scrum-process" v-else>
+        <div class="scrum-process" v-else-if="step >= 3">
           <img src="../assets/images/attached/sprint_process.png" />
+          <div
+            v-for="i in 7"
+            :key="i"
+            class="step-line"
+            :class="`line-${i}`"
+          ></div>
           <div class="scrum-process__step product-backlog">
             <div class="step-title">產品待辦清單</div>
             <div class="step-subtitle">Product Backlog</div>
@@ -264,22 +270,47 @@ onMounted(() => {
             <div class="step-title">短衝</div>
             <div class="step-subtitle">Sprint</div>
           </div>
-          <div class="scrum-process__step empty drag-step-1">
-            <!-- <div class="step-title">短衝檢視會議</div>
-            <div class="step-subtitle">Sprint Review</div> -->
-          </div>
-          <div class="scrum-process__step empty drag-step-2">
-            <!-- <div class="step-title">每日站立會議</div>
-            <div class="step-subtitle">Daily Scrum</div> -->
-          </div>
-          <div class="scrum-process__step empty drag-step-3">
-            <!-- <div class="step-title">短衝自省會議</div>
-            <div class="step-subtitle">Sprint Retrospective</div> -->
-          </div>
+          <draggable :list="answer" item-key="id" draggable=".draggable" @change="handleSort">
+            <template #item="{ element, index }">
+              <div
+                class="scrum-process__step drag-step"
+                :class="
+                  `drag-step-${index + 1}`,
+                  {
+                    empty: !element.text,
+                    draggable: element.text,
+                    error: !checkAnswer && correct[index] !== element.id,
+                  }
+                "
+                @drop="handleDrop(index)"
+                @dragover.prevent
+              >
+                <div v-if="element.text">
+                  <div class="step-title">{{ element.text }}</div>
+                  <div class="step-subtitle">{{ element.desc }}</div>
+                </div>
+              </div>
+            </template>
+          </draggable>
+          <draggable
+            :list="dragItams"
+            :sort="false"
+            item-key="id"
+            draggable=".drag-item"
+            @start="handleDragStart"
+            @end="handleDragEnd"
+          >
+            <template #item="{ element, index }">
+              <div class="drag-item" :class="`drag-item-${element.id}`">
+                <div class="item-title">{{ element.text }}</div>
+                <div class="item-subtitle">{{ element.desc }}</div>
+              </div>
+            </template>
+          </draggable>
         </div>
         <transition name="fade-in">
           <ClickPageMask
-            v-show="endStep && textSteps[step].showClickPage"
+            v-show="textSteps[step].showClickPage"
             :hasMask="textSteps[step].hasMask"
           />
         </transition>
@@ -410,8 +441,57 @@ onMounted(() => {
   .scrum-process {
     position: absolute;
     top: 235px;
+    .step-line {
+      position: absolute;
+      background-color: $PrimaryDefault;
+      width: 22px;
+      height: 4px;
+      opacity: 0;
+      &.line-1 {
+        top: 71px;
+        left: 94px;
+        animation: enter 0.5s .3s linear forwards;
+      }
+      &.line-2 {
+        top: 183px;
+        left: 94px;
+        animation: enter 0.5s .8s linear forwards;
+      }
+      &.line-3 {
+        top: 295px;
+        left: 94px;
+        animation: enter 0.5s 1.3s linear forwards;
+      }
+      &.line-4 {
+        width: 4px;
+        height: 50px;
+        top: 381px;
+        left: 372px;
+        animation: enter 0.5s 1.8s linear forwards;
+      }
+      &.line-5 {
+        top: 376px;
+        left: 562px;
+        animation: enter 0.5s 2.3s linear forwards;
+      }
+      &.line-6 {
+        width: 4px;
+        height: 32px;
+        top: 592px;
+        left: 687px;
+        animation: enter 0.5s 2.3s linear forwards;
+      }
+      &.line-7 {
+        width: 4px;
+        height: 32px;
+        top: 592px;
+        left: 1022px;
+        animation: enter 0.5s 2.3s linear forwards;
+      }
+    }
     &__step {
       height: 94px;
+      width: 300px;
       background: rgba(10, 13, 20, 0.6);
       border: 4px solid $PrimaryDefault;
       backdrop-filter: blur(5px);
@@ -419,84 +499,64 @@ onMounted(() => {
       text-align: center;
       padding: 8px;
       position: absolute;
+      &.error {
+        border: 4px solid $DangerDefault !important;
+      }
       &.empty {
-        width: 300px;
-        border: 2px dashed $PrimaryDefault;
+        opacity: 0;
+        border: 2px dashed $PrimaryDefault !important;
         background: transparent;
         backdrop-filter: initial;
-        &.drag-step-1 {
-          left: 584px;
-          top: 329px;
-          &:after {
-            width: 24px;
-            height: 4px;
-            top: calc(50% - 2px);
-            left: -24px;
-          }
+        animation: enter 0.5s 2.3s linear forwards;
+      }
+      &.drag-step {
+        border: 4px solid $RoleTeam1;
+        .draggable {
+          z-index: 1;
         }
-        &.drag-step-2 {
-          left: 544px;
-          top: 500px;
-          &:after {
-            width: 4px;
-            height: 32px;
-            bottom: -32px;
-            left: calc(50% - 2px);
-          }
+        .step-title {
+          color: $RoleTeam1;
         }
-        &.drag-step-3 {
-          left: 872px;
-          top: 500px;
-          &:after {
-            width: 4px;
-            height: 32px;
-            bottom: -32px;
-            left: calc(50% - 2px);
-          }
-        }
-        &:after {
-          content: "";
-          position: absolute;
-          background-color: $PrimaryDefault;
+        .step-subtitle {
+          color: $TextTint;
         }
       }
-      &:not(:last-of-type, .empty) {
-        width: 300px;
-        &:after {
-          content: "";
-          position: absolute;
-          width: 24px;
-          height: 4px;
-          background-color: $PrimaryDefault;
-          top: calc(50% - 2px);
-          left: -24px;
-        }
+      &.drag-step-1 {
+        left: 584px;
+        top: 329px;
+      }
+      &.drag-step-2 {
+        left: 544px;
+        top: 500px;
+      }
+      &.drag-step-3 {
+        left: 872px;
+        top: 500px;
       }
       &.product-backlog {
         top: 24px;
         left: 116px;
+        opacity: 0;
+        animation: enter 0.5s .3s linear forwards;
       }
       &.planning {
         top: 136px;
         left: 116px;
+        opacity: 0;
+        animation: enter 0.5s .8s linear forwards;
       }
       &.sprint-backlog {
         top: 248px;
         left: 116px;
+        opacity: 0;
+        animation: enter 0.5s 1.3s linear forwards;
       }
       &.sprint {
         width: 150px;
         top: 430px;
         left: 297px;
-        &:after {
-          content: "";
-          position: absolute;
-          width: 4px;
-          height: 55px;
-          background-color: $PrimaryDefault;
-          top: -55px;
-          left: calc(50% - 2px);
-        }
+        opacity: 0;
+        animation: enter 0.5s 1.8s linear forwards;
       }
       .step-title {
         font-weight: 700;
@@ -511,26 +571,84 @@ onMounted(() => {
         color: $PrimaryDark;
       }
     }
+    .drag-item {
+      position: absolute;
+      height: 94px;
+      width: 300px;
+      background: rgba(10, 13, 20, 0.6);
+      border: 4px solid $RoleTeam1;
+      backdrop-filter: blur(5px);
+      border-radius: 20px;
+      text-align: center;
+      padding: 8px;
+      left: 1100px;
+      z-index: 1;
+
+      .item-title {
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 48px;
+        color: $RoleTeam1;
+      }
+      .item-subtitle {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 22px;
+        color: $TextTint;
+      }
+      &-1 {
+        top: 86px;
+        animation: trans-enter-1 0.3s linear forwards;
+        @keyframes trans-enter-1 {
+            0%{
+                transform: translate(-300%, 200%);
+            }
+            100%{
+                transform: translate(0);
+            }
+        }
+      }
+      &-2 {
+        top: 204px;
+        animation: trans-enter-2 0.3s linear forwards;
+        @keyframes trans-enter-2 {
+            0%{
+                transform: translate(-200%, 100%);
+            }
+            100%{
+                transform: translate(0);
+            }
+        }
+      }
+      &-3 {
+        top: 322px;
+        animation: trans-enter-3 0.3s linear forwards;
+        @keyframes trans-enter-3 {
+            0%{
+                transform: translate(-100%, 0);
+            }
+            100%{
+                transform: translate(0);
+            }
+        }
+      }
+    }
     img {
       position: absolute;
       top: 0;
       left: 82px;
       width: 1085px;
       height: 650px;
+      opacity: 0;
+      animation: enter 0.5s linear forwards;
     }
-  }
-  .next-btn {
-    position: absolute;
-    bottom: 89px;
-    right: 40px;
-    animation: show-btn 0.5s linear forwards;
-    @keyframes show-btn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
+    @keyframes enter {
+        0%{
+            opacity: 0;
+        }
+        100%{
+            opacity: 1;
+        }
     }
   }
 }

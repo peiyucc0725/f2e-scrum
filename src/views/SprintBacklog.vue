@@ -8,7 +8,7 @@ import ClickPageMask from "../components/ClickPageMask.vue";
 import Backlog from "../components/Backlog.vue";
 
 const store = useStore();
-const step = ref(2);
+const step = ref(0);
 const stepLoading = ref(false);
 const endStep = ref(false);
 const textSteps = reactive([
@@ -93,7 +93,7 @@ const onClickPage = () => {
 };
 const handleNext = () => {
   if (step.value === 3) {
-    store.dispatch("setStep", 55);
+    store.dispatch("setStep", 70);
     return;
   }
   endStep.value = false;
@@ -170,7 +170,7 @@ watch(step, (val) => {
 onMounted(() => {
   stepLoading.value = true;
   setTimeout(() => {
-    store.dispatch("setStep", 41);
+    store.dispatch("setStep", 56);
   }, 300);
   setTimeout(() => {
     stepLoading.value = false;
@@ -182,7 +182,7 @@ onMounted(() => {
 <template>
   <div class="sprint-backlog">
     <transition name="fadeIn">
-      <div v-show="systemSetp > 10" class="inner" @click="onClickPage">
+      <div v-show="systemSetp > 55" class="inner" @click="onClickPage">
         <div class="background"></div>
         <Role
           v-if="textSteps[step].role"
@@ -294,7 +294,7 @@ onMounted(() => {
         </Backlog>
         <transition name="fade-in">
           <ClickPageMask
-            v-show="endStep && textSteps[step].showClickPage"
+            v-show="textSteps[step].showClickPage"
             :hasMask="textSteps[step].hasMask"
           />
         </transition>
@@ -423,20 +423,6 @@ onMounted(() => {
           font-weight: 700;
           top: 0;
         }
-      }
-    }
-  }
-  .next-btn {
-    position: absolute;
-    bottom: 89px;
-    right: 40px;
-    animation: show-btn 0.5s linear forwards;
-    @keyframes show-btn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
       }
     }
   }

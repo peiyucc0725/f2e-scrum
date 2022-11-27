@@ -40,14 +40,14 @@ defineProps({
       ),
       #555555;
     box-shadow: 0px 5px 0px #bbbbbb;
-    &:hover {
-      box-shadow: 0px 2px 0px #bbbbbb;
-    }
+    cursor: not-allowed;
   }
-  &:hover {
-    transition: 0.3s;
-    box-shadow: 0px 2px 0px $PrimaryDefault;
-    transform: translateY(3px);
+  &:not(.disabled) {
+    &:hover {
+      transition: 0.3s;
+      box-shadow: 0px 2px 0px $PrimaryDefault;
+      transform: translateY(3px);
+    }
   }
 }
 </style>
