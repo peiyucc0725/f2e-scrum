@@ -1,7 +1,28 @@
-# Vue 3 + Vite
+# THE F2E 4th 
+## Week 3 ☞ Scrum 新手村
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+![Web Cover Image](/public/WebDesignCover.png "Image by EG")
 
-## Recommended IDE Setup
+**UIUX Design: [EG](https://2022.thef2e.com/users/12061549261454740203)**
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+**Figma Document: [Link](https://www.figma.com/file/fWQvcoua0uhqduVbYYPToL/EGs-F2E---Week3---Scrum-%E6%96%B0%E6%89%8B%E6%9D%91?node-id=19%3A1867&t=gA04sqXmbGVUpQOJ-0)**
+
+**Live Demo: [Scrum 新手村](https://peiyu0725.github.io/f2e-scrum/)**
+
+## Use Technology & Library
+```
+Node.js Version: 16 LTS
+Framework: Vue3
+Build Tool: Vite
+Library: Vue.Draggable
+```
+
+-----
+### Install Packages 
+```
+npm install
+```
+### Start Dev Server
+```
+npm run dev
+```
