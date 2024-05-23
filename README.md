@@ -7,7 +7,7 @@
 
 **Figma Document: [Link](https://www.figma.com/file/fWQvcoua0uhqduVbYYPToL/EGs-F2E---Week3---Scrum-%E6%96%B0%E6%89%8B%E6%9D%91?node-id=19%3A1867&t=gA04sqXmbGVUpQOJ-0)**
 
-**Live Demo: [Scrum 新手村](https://peiyu0725.github.io/f2e-scrum/)**
+**Live Demo: [Scrum 新手村](https://peiyucc0725.github.io/f2e-scrum/)**
 
 ## Use Technology & Library
 ```
